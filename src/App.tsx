@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from './components/Header';
 import { ImmediateForm } from './components/ImmediateForm';
+import { IADelivery } from './components/IADelivery';
 import { PainPoints } from './components/PainPoints';
 import { Foundation } from './components/Foundation';
 import { DirectSales } from './components/DirectSales';
@@ -19,6 +20,7 @@ export default function App() {
     <div className="min-h-screen">
       <Header onCtaClick={scrollToForm} />
       <ImmediateForm />
+      <IADelivery onCtaClick={scrollToForm} />
       <PainPoints />
       <Foundation onCtaClick={scrollToForm} />
       <DirectSales onCtaClick={scrollToForm} />
