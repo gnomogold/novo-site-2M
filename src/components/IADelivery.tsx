@@ -65,31 +65,42 @@ const AnimatedChatMockup: React.FC = () => {
   const allMessages = [
     {sender:"bot", text:"Oi, tudo bem? Está pensando em pedir algo gostoso hoje?"},
     {sender:"client", text:"Sim! Quero fazer um pedido."},
-    {sender:"bot", text:"Perfeito! Vi aqui que sua favorita é a Pizza Quatro Queijos tamanho grande, que você pediu na última sexta. Quer repetir essa delícia hoje?"},
-    {sender:"bot", text:"Olha só: hoje você pode adicionar uma Pizza Broto Doce de Prestígio por apenas R$10,99. Uma ótima pedida para compartilhar e deixar o dia da sua esposa mais leve e feliz. Quer incluir essa delícia junto?"},
-    {sender:"client", text:"Boa, adiciona a Broto Doce de Prestígio."},
-    {sender:"bot", text:"Perfeito, combo atualizado. Você prefere pagar online ou na entrega?"}
+    {sender:"bot", text:"Perfeito! Vi aqui que sua favorita é a Pizza Quatro Queijos grande, que você pediu na última sexta. Quer repetir essa delícia hoje?"},
+    {sender:"client", text:"Quero sim, pode ser."},
+    {sender:"bot", text:"Excelente escolha! Hoje você pode adicionar uma Pizza Broto Doce de Prestígio por apenas R$10,99 — perfeita para aproveitar com sua esposa e deixar o dia dela ainda mais feliz. Quer incluir essa Broto deliciosa?"}
   ];
 
-  React.useEffect(() => {
+  const runConversation = React.useCallback(() => {
+    setMessages([]); // Clear messages before starting
     allMessages.forEach((msg, i) => {
       setTimeout(() => {
         setMessages(prev => [...prev, msg]);
-      }, i * 1800);
+      }, i * 2500); // 2.5 seconds between messages
     });
   }, []);
 
+  React.useEffect(() => {
+    runConversation();
+    
+    // Set up looping - restart after all messages + 2 seconds
+    const loopInterval = setInterval(() => {
+      runConversation();
+    }, allMessages.length * 2500 + 2000);
+    
+    return () => clearInterval(loopInterval);
+  }, [runConversation]);
+
   return (
-    <div className="bg-gray-800 rounded-xl shadow-xl p-6 w-full max-w-sm text-white">
+    <div className="bg-gray-800 rounded-xl shadow-xl p-6 w-full max-w-sm text-white font-sans">
       <h3 className="text-xl font-bold flex items-center mb-4">
-        <Bot className="w-6 h-6 text-red-500 mr-2" />
+        <span className="mr-2">🤖</span>
         IA Delivery Assistant
       </h3>
-      <div className="space-y-3 min-h-[300px] max-h-[300px] overflow-y-auto">
+      <div className="space-y-3 min-h-[200px] overflow-hidden flex flex-col">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`max-w-[80%] px-4 py-2 rounded-lg animate-fadeIn ${
+            className={`max-w-[80%] px-4 py-2 rounded-lg mb-2 animate-fadeIn ${
               msg.sender === 'bot'
                 ? 'bg-gray-700 text-white'
                 : 'bg-red-600 text-white ml-auto'
@@ -102,9 +113,20 @@ const AnimatedChatMockup: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className="mt-4 flex justify-between text-green-400 text-sm">
-        <span>24/7 Disponível</span>
-        <span>+35% Ticket Médio</span>
+      
+      <div className="mt-6 flex justify-around text-center">
+        <div>
+          <div className="flex items-center justify-center text-green-400">
+            <span className="mr-1">⏰</span><span className="text-lg font-semibold">24/7</span>
+          </div>
+          <span className="text-white text-sm">Disponível</span>
+        </div>
+        <div>
+          <div className="flex items-center justify-center text-green-400">
+            <span className="mr-1">📈</span><span className="text-lg font-semibold">+35%</span>
+          </div>
+          <span className="text-white text-sm">Ticket Médio</span>
+        </div>
       </div>
       
       <style jsx>{`
